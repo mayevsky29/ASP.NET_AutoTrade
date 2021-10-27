@@ -1,2 +1,14 @@
 npx create-react-app frontend
 
+npm i bootstrap prop-types react-router-dom axios font-awesome
+
+"ConnectionStrings": {
+    "DefaultConnection": "Data Source=autopartdb.sqlite;"
+  }
+  Source=autopartdb - можна прописувати любу назву
+  
+ Підключаються в index.js
+  import 'bootstrap/dist/css/bootstrap.css';
+import 'font-awesome/css/font-awesome.min.css';
+  
+  
