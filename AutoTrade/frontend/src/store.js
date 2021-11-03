@@ -4,6 +4,8 @@ import { connectRouter, routerMiddleware } from 'connected-react-router';
 import thunk from "redux-thunk";
 import { createBrowserHistory } from 'history';
 import authReducer from "./reducers/authReducer";
+import flashReducer from "./reducers/flashReducer";
+
 
 // Create browser history to use in the Redux store
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
@@ -18,6 +20,7 @@ const middleware = [
 
 const rootReducer = combineReducers({
     auth: authReducer,
+    toast: flashReducer,
     router: connectRouter(history)
 });
 
@@ -34,4 +37,6 @@ const store = createStore(
     {},
     compose(applyMiddleware(...middleware), ...enhancers)
 );
+
+
 export default store;

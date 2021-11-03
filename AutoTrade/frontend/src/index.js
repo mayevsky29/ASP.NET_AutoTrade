@@ -7,22 +7,23 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
-import store, {history} from './store';
-import {authUser} from './actions/auth';
+import store, { history } from './store';
+import { authUser } from './actions/auth';
+
 
 //console.log("hello", history);
 const token = localStorage.authToken;
 
-if(token) {
+if (token) {
   store.dispatch(authUser(token));
 }
 
 ReactDOM.render(
-    <Provider store={store}>
-     <ConnectedRouter history={history}>
-        <App />
-      </ConnectedRouter>
-    </Provider>,
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      <App />
+    </ConnectedRouter>
+  </Provider>,
   document.getElementById('root')
 );
 

@@ -17,6 +17,20 @@ namespace AutoTrade.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class EditViewModel
+    {
+        public int Id { get; set; }
+        public string Email { get; set; }
+        public string Firstname { get; set; }
+        public string Secondname { get; set; }
+        public string Phone { get; set; }
+        public IFormFile Image { get; set; }
+        public string ConfirmPassword { get; set; }
+        public string Password { get; set; }
+        public string OldPassword { get; set; }
+
+    }
+
     public class LoginViewModel
     {
         public string Email { get; set; }

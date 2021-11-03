@@ -1,6 +1,9 @@
 import React from 'react';
+import FlashMessageToast from '../../Flash/FlashMessageToast';
+
 
 import Header from '../../header';
+
 
 export default props => (
     <>
@@ -8,5 +11,7 @@ export default props => (
       <div className="container">
         {props.children}
       </div>
+    <FlashMessageToast />
+   
     </>
   );
