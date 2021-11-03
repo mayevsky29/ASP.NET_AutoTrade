@@ -1,37 +1,27 @@
-import React from 'react'
 import './App.css';
-import RegisterPage from './components/auth/Register';
-import LoginPage from './components/auth/Login';
-import Header from './components/header';
-import HomePage from './components/home';
+import React, {Suspense} from 'react';
 import {
-  BrowserRouter as Router,
   Switch,
   Route
-} from 'react-router-dom';
+} from "react-router";
+const DefaultLayout = React.lazy(()=>import('./components/containers/DefaultLayout'));
+const AdminLayout = React.lazy(()=>import('./components/containers/AdminLayout'));
 
 class App extends React.Component {
+
   render() {
     return (
-      <Router>
-      <Header />
-      <div className="container">
-      <Switch>
-            <Route exact path="/">
-              <HomePage />
-            </Route>
-
-            <Route exact path="/register">
-              <RegisterPage />
-            </Route>
-
-            <Route exact path="/login">
-              <LoginPage />
-            </Route>
+      <>
+        <Suspense fallback={<div>Загрузка ...</div>}>
+          <Switch>
+            <Route path="/admin" name="Admin" render={props=> <AdminLayout {...props}/>} />
+            <Route path="/" name="Default" render={props=> <DefaultLayout {...props}/>} />
           </Switch>
-        </div>
-        </Router>
+        </Suspense>
+        </>
+      
     );
   }
 }
-export default App
+
+export default App;

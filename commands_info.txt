@@ -11,4 +11,6 @@ npm i bootstrap prop-types react-router-dom axios font-awesome
   import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.min.css';
   
+  npm i classnames formik react-redux redux redux-devtools-extension redux-thunk yup
   
+  npm i connected-react-router font-awesome

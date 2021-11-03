@@ -11,4 +11,4 @@ const validationFields= () => {
             .matches(/[a-zA-Z]/, 'Пароль має містить латинські символи.')
     });
 }
-export default validationFields; 
+export default validationFields;

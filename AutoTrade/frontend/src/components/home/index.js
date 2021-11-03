@@ -1,9 +1,11 @@
-import React from "react";
+import React from 'react'
+
 
 const HomePage = () => {
+
     return (
         <>
-        <h1>Головна сторінка</h1>
+            <h1>Головна сторінка</h1>
         </>
     )
 }

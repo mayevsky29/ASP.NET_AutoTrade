@@ -1,11 +1,22 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '../../actions/auth';
+import { push } from 'connected-react-router';
 
 const Header = () => {
-    const {isAuth, username} = useSelector(redux => redux.auth);
+    
+    const dispatch = useDispatch();
 
-    console.log("Auth user info ", isAuth);
+    const {isAuth, user} = useSelector(redux => redux.auth);
+    const onClickLogout = (e) => {
+        e.preventDefault();
+        dispatch(logout());
+        dispatch(push("/"));
+    }
+
+
+    //console.log("Auth user info ", isAuth);
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container">
@@ -29,17 +40,18 @@ const Header = () => {
                                 <Link className="nav-link" to="/register">Реєструватися</Link>
                             </li>
                         </ul>
-
                         :
                         <ul className="navbar-nav">
                              <li className="nav-item">
-                                <Link className="nav-link" to="/profile">{username}</Link>
+                                <Link className="nav-link" to="/profile">{user.name}</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/logout">Вихід</Link>
+                                <Link className="nav-link" to="/logout" onClick={onClickLogout}>Вихід</Link>
                             </li>
                         </ul>
                     }
+                    
+
                 </div>
             </div>
         </nav>

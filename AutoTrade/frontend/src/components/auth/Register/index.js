@@ -1,44 +1,83 @@
-
-import React from 'react'
+import React, {useRef, useState} from 'react'
 import { Formik, Form } from 'formik';
-import { useHistory } from "react-router-dom";
-import authService from '../../../services/auth.service';
+import { push } from "connected-react-router";
+//import { useHistory } from "react-router-dom";
 import MyTextInput from '../../common/MyTextInput';
 import validationFields from './validation';
-import { useDispatch } from 'react-redux';
-import { REGISTER } from '../../../constants/actionTypes';
+import { useDispatch, useSelector } from 'react-redux';
+import MyPhotoInput from '../../common/MyPhotoInput';
+import { RegisterUser } from '../../../actions/auth';
+import EclipseWidget from '../../common/eclipse';
+
+
 
 const RegisterPage = () => {
+
     const initState = {
         email: '',
         phone: '',
         firstName: '',
         secondName: '',
+        photo: null,
         password: '',
         confirmPassword: ''
     }
-    const history = useHistory();
+    //const history = useHistory();
     const dispatch = useDispatch();
-
-    
+    const { loading, errors } = useSelector(state => state.auth);
+    const refFormik = useRef();
+    const titleRef = useRef();
+    const [invalid, setInvalid] = useState([]);
 
     const onSubmitHandler = async (values) => {
-        try {
-            const result = await authService.register(values);
-            console.log("Server is good ", result);
-            dispatch({type: REGISTER, payload: values.email});
-            history.push("/");
+
+        console.log("errors", errors);
+        try {            
+            const formData = new FormData();
+            Object.entries(values).forEach(([key, value]) => formData.append(key, value));
+            dispatch(RegisterUser(formData))
+                .then(result => {
+                    dispatch(push("/"));
+                })
+                .catch(ex=> {
+                    Object.entries(ex.errors).forEach(([key, values]) => {
+                        let message = '';
+                        values.forEach(text=> message+=text+" ");
+                        refFormik.current.setFieldError(key,message);
+                    });
+
+                    setInvalid(ex.errors.invalid);
+                    titleRef.current.scrollIntoView({ behavior: 'smooth' })
+                    
+                });
         }
         catch (error) {
-            console.log("Server is bad ", error.response);
+            console.log("Server is bad register from", errors);
         }
     }
- 
-        return (
-            <div className="row">
-                <div className="offset-md-3 col-md-6">
-                    <h1 className="text-center">Реєстрація</h1>
-                    <Formik
+
+    return (
+        
+        <div className="row">
+            <div className="offset-md-3 col-md-6">
+                <h1 ref={titleRef} className="text-center" >Реєстрація</h1>
+                {invalid && invalid.length>0 &&
+                    <div className="alert alert-danger">
+                        <ul>
+                        {
+                            invalid.map((text, index) => {
+                                return (
+                                    <li key={index}>{text}</li>
+
+                                );
+                            })
+                        }
+                        </ul>
+                    </div>
+
+                }
+                <Formik
+                    innerRef = {refFormik}
                     initialValues={initState}
                     validationSchema={validationFields()}
                     onSubmit={onSubmitHandler}
@@ -67,6 +106,10 @@ const RegisterPage = () => {
                             name="firstName" 
                             id="firstName"
                             type="text" />
+                        
+                        <MyPhotoInput 
+                            refFormik={refFormik}
+                            field="photo" />
 
                         <MyTextInput
                             label="Пароль"
@@ -84,11 +127,11 @@ const RegisterPage = () => {
                     </Form>
                 </Formik>
             </div>
-                   
-            </div>
-        )
-}
 
+            {loading && <EclipseWidget />}
+        </div>
+    )
+}
 
 
 export default RegisterPage

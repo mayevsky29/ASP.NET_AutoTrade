@@ -20,4 +20,4 @@ const validationFields= () => {
             .required('Confirm Password is required'),
     });
 }
-export default validationFields; 
+export default validationFields;

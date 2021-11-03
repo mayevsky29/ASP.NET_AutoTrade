@@ -1,0 +1,225 @@
+	/index.js(в проекті store.js)
+import rootReducer from './rootReducer';
+
+додати в метод createStore rootReducer
+const store = createStore(
+	rootReducer,
+	applyMiddleware(thunk)
+)
+
+	rootReducer.js
+import { combineReducers } from 'redux';
+import flashMessages from './reducers/flashMessages';
+
+export default combineReducers({
+	flashMessages
+})
+
+	reducers/flashMessages.js
+export default ( state = [], action = {}) => {
+	return state;
+}
+
+	/index.js(в проекті store.js)
+import { createStore, applyMiddleware, compose } from 'redux';
+	
+додати в метод createStore rootReducer
+const store = createStore(
+	rootReducer,
+	compose(
+		applyMiddleware(thunk),
+		window.devToolsExtension ? window.devToolsExtension() : f => flashMessages
+		
+	)	
+);
+
+	action/flashMessages.js
+export function addFlashMessage(message) {
+	return {
+		type: ADD_FLASH_MESSAGE,
+		message
+	}
+}
+
+	action/types.js
+export const ADD_FLASH_MESSAGE = 'ADD_FLASH_MESSAGE';
+
+	components/signup/SignupForm.js
+
+в onSubmit додаємо пропсу AddFlashMessage 
+				this.props.AddFlashMessage({
+					type: 'success',
+					text: 'You signed up successfully. Welcome!'
+
+onSubmit(e) {
+	e.preventDefault();
+	if(this.isValid()) {
+		this.setState({ errors: {}, isLoading: true });
+		this.props.userSignupRequest(this.state). then(
+			() => {
+				this.props.AddFlashMessage({
+					type: 'success',
+					text: 'You signed up successfully. Welcome!'
+				});
+				this.context.router.push('/');
+			},
+			({data}) => this.setState({ errors: data, isLoading: false })
+		);
+	}
+}
+
+	components/signup/SignupPage.js
+import { addFlashMessage } from '../../action/flashMessages.js';	
+	
+в самому низу добавляємо
+addFlashMessage: React.PropTypes.func.isRequired
+
+SignupForm.propTypes = {
+	userSignupRequest: React.PropTypes.func.isRequired,
+	addFlashMessage: React.PropTypes.func.isRequired
+}
+
+	addFlashMessage
+export default connect (null, { userSignupRequest, addFlashMessage }) (SignupPage);
+
+7.00
+
+	reducers/flashMessages.js
+import { ADD_FLASH_MESSAGE } from '../action/types';
+import shortid from 'shortid';
+
+export default ( state = [], action = {}) => {
+	switch(action.type) {
+		case ADD_FLASH_MESSAGE:
+			return [
+				...state,
+				{
+					id: shortid.generate(),
+					type: action.message.type,
+					text: action.message.text
+				}
+			];
+		default: return state;
+	}
+}
+
+
+PART 2
+
+	App.js
+import FlashMessagesList from './flash/FlashMessagesList';
+
+	добавляємо в return "container"
+<FlashMessagesList />
+
+	components/flash/FlashMessagesList.js
+import React from 'react';
+import FlashMessage from './FlashMessage';
+import { connect } from 'react-redux';
+import { deleteFlashMessage } from '../../action/flashMessages';
+
+class FlashMessagesList extends React.Component {
+	render() {
+	const messages = this.props messages.map(message => 
+		<FlashMessage key={message.id} message={message} deleteFlashMessage={deleteFlashMessage} />
+	);
+	return (
+		<div>{messages}</div>
+		);
+	}
+}
+
+FlashMessagesList.propTypes = {
+	message: React.PropTypes.array.isRequired,
+	deleteFlashMessage: React.PropTypes.func.isRequired,
+}
+
+function mapStateToProps(state) {
+	return {
+	messages: state.flashMessages
+	}
+}
+
+export default connect(mapStateToProps, { deleteFlashMessage }) (FlashMessagesList);
+
+	components/flash/FlashMessage.js
+import React from 'react';
+import classnames from 'classnames';
+
+class FlashMessage extends React.Component {
+
+	constructor(props) {
+		super(props);
+		this.onClick = this.onClick.bind(this);
+	}
+	onClick() {
+		this.props.deleteFlashMessage(this.props.message.id);
+	}
+	
+	render() {
+		const { id, type, text } = this.props.message;
+		return (
+		<div className={classnames('alert', {
+		'alert-success': type === 'success',
+		'alert-danger': type === 'error'
+		})}>
+			<button onClick={this.onClick} className="close"><span>&times;</span></button>
+			{text}
+		</div>
+		);
+	}
+}
+
+FlashMessagesList.propTypes = {
+	message: React.PropTypes.object.isRequired,
+	deleteFlashMessage: React.PropTypes.func.isRequired
+}
+
+export default FlashMessage;
+
+	action/flashMessages.js
+import { ADD_FLASH_MESSAGE, DELETE_FLASH_MESSAGE } from './types';
+
+add functions
+
+export function deleteFlashMessage(id) {
+	return{
+		type: DELETE_FLASH_MESSAGE,
+		id
+	}
+}
+
+	action/types.js
+
+export const DELETE_FLASH_MESSAGE = 'DELETE_FLASH_MESSAGE';
+
+	reducers/flashMessages.js
+import { ADD_FLASH_MESSAGE, DELETE_FLASH_MESSAGE } from './types';
+import findIndex from 'lodash/findIndex';
+
+	case DELETE_FLASH_MESSAGE:
+		const index = findIndex(state, {id: action.id });
+		if(index >= 0) {
+			return [
+			... state.slice(0, index),
+			... state.slice(index + 1)
+			];
+		}
+
+якщо не закривається повідомлення
+	в components/flash/FlashMessagesList.js
+	
+		deleteFlashMessage = {this.props.deleteFlashMessage} />
+
+
+
+
+
+
+
+
+
+
+
+
+
