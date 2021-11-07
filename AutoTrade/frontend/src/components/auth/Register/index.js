@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import MyPhotoInput from '../../common/MyPhotoInput';
 import { RegisterUser } from '../../../actions/auth';
 import EclipseWidget from '../../common/eclipse';
+import FlashMessage from '../../../actions/FlashMessage';
 
 
 
@@ -37,7 +38,10 @@ const RegisterPage = () => {
             Object.entries(values).forEach(([key, value]) => formData.append(key, value));
             dispatch(RegisterUser(formData))
                 .then(result => {
-                    dispatch(push("/"));
+                    dispatch(FlashMessage({
+                        type: 'success',
+                        text: 'Успішно зареєстровано!'
+                    }));
                 })
                 .catch(ex=> {
                     Object.entries(ex.errors).forEach(([key, values]) => {

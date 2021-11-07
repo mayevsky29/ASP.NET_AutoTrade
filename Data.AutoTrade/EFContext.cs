@@ -1,4 +1,5 @@
-﻿using Data.AutoTrade.Entities.Identity;
+﻿using Data.AutoTrade.Entities;
+using Data.AutoTrade.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ namespace Data.AutoTrade
 
         }
 
+        public DbSet<ProductEntity> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
