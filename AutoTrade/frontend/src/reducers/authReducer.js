@@ -3,8 +3,7 @@ import { LOGIN, REGISTER, REGISTER_BEGIN,
 
 const initialState ={
     isAuth: false,
-    user: {},
-    loading: false
+    user: {}    
 }
 
 const authReducer = (state = initialState, action) => {
@@ -12,21 +11,19 @@ const authReducer = (state = initialState, action) => {
     switch(type) {
         case REGISTER_BEGIN: {
             return {
-                ...state,
-                loading: true
+                ...state
+               
             }
         }
         case REGISTER_FAILED: {
             return {
-                ...state,
-                loading: false
-
+                ...state           
             }
         }
         case REGISTER: {
             return {
-                isAuth: false,
-                loading: false
+                isAuth: false
+               
             };
         }
         case LOGIN: {

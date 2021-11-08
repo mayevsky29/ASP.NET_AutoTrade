@@ -8,7 +8,7 @@ const Header = () => {
     
     const dispatch = useDispatch();
 
-    const {isAuth, user} = useSelector(redux => redux.auth);
+    const {auth, cart} = useSelector(redux => redux);
     const onClickLogout = (e) => {
         e.preventDefault();
         dispatch(logout());
@@ -31,7 +31,7 @@ const Header = () => {
                         </li>
                     </ul>
 
-                    {!isAuth ?
+                    {!auth.isAuth ?
                         <ul className="navbar-nav">
                             <li className="nav-item">
                                 <Link className="nav-link" to="/login">Вхід</Link>
@@ -43,7 +43,13 @@ const Header = () => {
                         :
                         <ul className="navbar-nav">
                              <li className="nav-item">
-                                <Link className="nav-link" to="/profile">{user.name}</Link>
+                             <Link className="nav-link" to="/cart">
+                                    <i className="pi pi-shopping-cart" style={ {fontSize: "2rem"}}></i>
+                                    {cart.count}
+                                </Link>
+                            </li>
+                             <li className="nav-item">
+                                <Link className="nav-link" to="/profile">{auth.user.name}</Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to="/logout" onClick={onClickLogout}>Вихід</Link>

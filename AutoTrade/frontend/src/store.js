@@ -5,6 +5,8 @@ import thunk from "redux-thunk";
 import { createBrowserHistory } from 'history';
 import authReducer from "./reducers/authReducer";
 import flashReducer from "./reducers/flashReducer";
+import productReducer from "./reducers/productReducer";
+import cartReducer from "./reducers/cartReducer";
 
 
 // Create browser history to use in the Redux store
@@ -20,6 +22,8 @@ const middleware = [
 
 const rootReducer = combineReducers({
     auth: authReducer,
+    product: productReducer,
+    cart: cartReducer,
     toast: flashReducer,
     router: connectRouter(history)
 });
