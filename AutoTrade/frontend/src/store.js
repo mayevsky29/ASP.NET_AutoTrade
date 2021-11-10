@@ -7,6 +7,7 @@ import authReducer from "./reducers/authReducer";
 import flashReducer from "./reducers/flashReducer";
 import productReducer from "./reducers/productReducer";
 import cartReducer from "./reducers/cartReducer";
+import usersReducer from "./reducers/usersReducer";
 
 
 // Create browser history to use in the Redux store
@@ -22,6 +23,7 @@ const middleware = [
 
 const rootReducer = combineReducers({
     auth: authReducer,
+    user: usersReducer,
     product: productReducer,
     cart: cartReducer,
     toast: flashReducer,

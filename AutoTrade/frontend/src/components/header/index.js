@@ -29,10 +29,14 @@ const Header = () => {
                         <li className="nav-item">
                             <Link className="nav-link active" aria-current="page" to="/">Головна</Link>
                         </li>
+                        <li className="nav-item">
+                                <Link className="nav-link" to="/users">Користувачі</Link>
+                            </li>
                     </ul>
 
                     {!auth.isAuth ?
                         <ul className="navbar-nav">
+                       
                             <li className="nav-item">
                                 <Link className="nav-link" to="/login">Вхід</Link>
                             </li>

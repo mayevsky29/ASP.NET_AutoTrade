@@ -18,6 +18,13 @@ class AuthService {
             }
         });
     }
+    getusers(data) {
+        return http.get("api/account/get", data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
 }
 
 export default new AuthService();

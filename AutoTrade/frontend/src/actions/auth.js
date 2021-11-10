@@ -50,6 +50,8 @@ export const LoginUser = (model) => async (dispatch) => {
     }
 }
 
+
+
 export const authUser = (token) => (dispatch) => {
     var user = jwt.decode(token);
     setAuthorizationToken(token);

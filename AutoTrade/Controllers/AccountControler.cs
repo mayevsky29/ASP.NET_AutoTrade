@@ -208,7 +208,7 @@ namespace AutoTrade.Controllers
             return result;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("get")]
         public IActionResult GetUsers()
         {
