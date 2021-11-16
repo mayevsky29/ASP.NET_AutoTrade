@@ -17,5 +17,6 @@ namespace Data.AutoTrade.Entities
         public string Image { get; set; }
         public int Priority { get; set; }
         public decimal Price { get; set; }
+        public virtual ICollection<CartEntity> CartEntities { get; set; }
     }
 }

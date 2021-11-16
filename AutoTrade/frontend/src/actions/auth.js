@@ -4,6 +4,7 @@ import { REGISTER, REGISTER_BEGIN,
 } from "../constants/actionTypes";
 import setAuthorizationToken from '../utils/setAuthorizationToken';
 import jwt from "jsonwebtoken";
+import { getCartUser } from "./cart";
 
 
 //import { useHistory } from "react-router-dom";
@@ -35,7 +36,6 @@ export const RegisterUser = (model) => async (dispatch) => {
 export const LoginUser = (model) => async (dispatch) => {
 
     try {
-        dispatch({type: REGISTER_BEGIN});
         const result = await authService.login(model);
         const token = result.data.token;
         console.log("login reuslt", result);
@@ -56,6 +56,7 @@ export const authUser = (token) => (dispatch) => {
     var user = jwt.decode(token);
     setAuthorizationToken(token);
     dispatch({type: LOGIN, payload: user});
+    dispatch(getCartUser());
 }
 
 

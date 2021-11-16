@@ -27,6 +27,13 @@ namespace AutoTrade.Mapper
               .ForMember(x => x.Quantity, opt => opt.MapFrom(x => 25))
               .ForMember(x => x.InventoryStatus, opt => opt.MapFrom(x => "INSTOCK"))
               .ForMember(x => x.Rating, opt => opt.MapFrom(x => 5));
+
+            CreateMap<CartAddViewModel, CartEntity>();
+
+            CreateMap<CartEntity, CartItemViewModel>()
+               .ForMember(x => x.ProductName, opt => opt.MapFrom(x => x.Product.Name))
+               .ForMember(x => x.ProductImage, opt => opt.MapFrom(x => @"\images\" + x.Product.Image))
+               .ForMember(x => x.ProductPrice, opt => opt.MapFrom(x => x.Product.Price));
         }
     }
 }

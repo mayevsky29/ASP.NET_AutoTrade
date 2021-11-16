@@ -5,9 +5,9 @@ import userService from "../services/user.service";
 export const LoadUser = () => async(dispatch) => {
 
     try {
-        const result = await userService.getdata(); 
-        console.log("All users:", result.data);        
-        dispatch({type: LOAD_USERS, data: result.data});    
+        const {data} = await userService.getdata(); 
+        console.log("All users:", data);        
+        dispatch({type: LOAD_USERS, payload: data});    
     }
     catch(error) {
         console.log("Сталася помилка",error);

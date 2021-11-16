@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Button } from 'primereact/button';
@@ -7,25 +7,29 @@ import { Rating } from 'primereact/rating';
 import './home.css';
 import { ListProduct } from '../../actions/products';
 import EclipseWidget from '../common/eclipse';
+import { AddCartProduct } from '../../actions/cart';
+import CartDialog from './cartDialog';
+import { Dialog } from 'primereact/dialog';
 
 
 const HomePage = () => {
 
-    
+
     const dispatch = useDispatch();
     const { list } = useSelector(state => state.product);
+    const [visible, setVisible] = useState(false);
 
     const [layout, setLayout] = useState('grid');
     const [sortKey, setSortKey] = useState(null);
     const [sortOrder, setSortOrder] = useState(null);
     const [sortField, setSortField] = useState(null);
     const sortOptions = [
-        {label: 'Price High to Low', value: '!price'},
-        {label: 'Price Low to High', value: 'price'},
+        { label: 'Price High to Low', value: '!price' },
+        { label: 'Price Low to High', value: 'price' },
     ];
 
     const [loading, setLoading] = useState(true);
-    
+
     useEffect(() => {
         try {
             dispatch(ListProduct())
@@ -39,10 +43,29 @@ const HomePage = () => {
         catch (error) {
             setLoading(false);
             console.log("Server is bad register from", error);
-        } 
+        }
     }, []);
-       
 
+    const onClickAddToCart = (e, id) => {
+        e.preventDefault();
+        try {
+            var data = {
+                productId: id,
+                quantity: 1
+            }
+            dispatch(AddCartProduct(data))
+                .then(() => {
+                    setVisible(true);
+                    console.log("Add to cart competed!");
+                })
+                .catch(ex => {
+                });
+        }
+        catch (error) {
+            console.log("Server is bad register from", error);
+        }
+
+    }
 
     const onSortChange = (event) => {
         const value = event.value;
@@ -63,7 +86,7 @@ const HomePage = () => {
         return (
             <div className="p-col-12">
                 <div className="product-list-item">
-                    <img src={`${data.image}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                    <img src={`${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
                     <div className="product-list-detail">
                         <div className="product-name">{data.name}</div>
                         <div className="product-description">{data.description}</div>
@@ -72,7 +95,7 @@ const HomePage = () => {
                     </div>
                     <div className="product-list-action">
                         <span className="product-price">{data.price} грн.</span>
-                        <Button icon="pi pi-shopping-cart" label="Add to Cart" disabled={data.inventoryStatus === 'OUTOFSTOCK'}></Button>
+                        <Button icon="pi pi-shopping-cart" label="Add to Cart" onClick={(e) => onClickAddToCart(e, data.id)} disabled={data.inventoryStatus === 'OUTOFSTOCK'}></Button>
                         <span className={`product-badge status-${data.inventoryStatus.toLowerCase()}`}>{data.inventoryStatus}</span>
                     </div>
                 </div>
@@ -92,14 +115,14 @@ const HomePage = () => {
                         <span className={`product-badge status-${data.inventoryStatus.toLowerCase()}`}>{data.inventoryStatus}</span>
                     </div>
                     <div className="product-grid-item-content">
-                    <img src={`${data.image}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                        <img src={`${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
                         <div className="product-name">{data.name}</div>
                         <div className="product-description">{data.description}</div>
                         <Rating value={data.rating} readOnly cancel={false}></Rating>
                     </div>
                     <div className="product-grid-item-bottom">
                         <span className="product-price">{data.price} грн.</span>
-                        <Button icon="pi pi-shopping-cart" label="Add to Cart" disabled={data.inventoryStatus === 'OUTOFSTOCK'}></Button>
+                        <Button icon="pi pi-shopping-cart" label="Add to Cart" onClick={(e) => onClickAddToCart(e, data.id)} disabled={data.inventoryStatus === 'OUTOFSTOCK'}></Button>
                     </div>
                 </div>
             </div>
@@ -120,10 +143,10 @@ const HomePage = () => {
     const renderHeader = () => {
         return (
             <div className="p-grid p-nogutter">
-                <div className="p-col-6" style={{textAlign: 'left'}}>
-                    <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Sort By Price" onChange={onSortChange}/>
+                <div className="p-col-6" style={{ textAlign: 'left' }}>
+                    <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Sort By Price" onChange={onSortChange} />
                 </div>
-                <div className="p-col-6" style={{textAlign: 'right'}}>
+                <div className="p-col-6" style={{ textAlign: 'right' }}>
                     <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
                 </div>
             </div>
@@ -133,15 +156,26 @@ const HomePage = () => {
 
     return (
         <>
+
+            <Dialog
+                header='Dialog'
+                visible={visible}
+                style={{ width: '50vw' }}
+                modal={true}
+                onHide={() => setVisible(false)}
+                maximizable={false}>
+                <CartDialog />
+            </Dialog>
+            
             <div className="dataview-demo">
                 <div className="card">
-                <DataView value={list} layout={layout} header={header}
+                    <DataView value={list} layout={layout} header={header}
                         itemTemplate={itemTemplate} paginator rows={9}
                         sortOrder={sortOrder} sortField={sortField} />
                 </div>
             </div>
-        
-        {loading && <EclipseWidget/>}
+
+            {loading && <EclipseWidget />}
         </>
     )
 }

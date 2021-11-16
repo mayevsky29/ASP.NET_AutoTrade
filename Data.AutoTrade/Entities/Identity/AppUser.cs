@@ -19,5 +19,6 @@ namespace Data.AutoTrade.Entities.Identity
         [StringLength(50)]
         public string Phone { get; set; }
         public virtual ICollection<AppUserRole> UserRoles { get; set; }
+        public virtual ICollection<CartEntity> CartEntities { get; set; }
     }
 }
